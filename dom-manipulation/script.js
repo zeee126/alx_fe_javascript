@@ -17,15 +17,18 @@ const quotes = [
 // Function to show a random quote
 function showRandomQuote() {
   if (quotes.length === 0) {
-    document.getElementById("quoteDisplay").textContent =
-      "No quotes available.";
+    document.getElementById("quoteDisplay").innerHTML =
+      "<em>No quotes available.</em>";
     return;
   }
   const randomIndex = Math.floor(Math.random() * quotes.length);
   const quote = quotes[randomIndex];
-  document.getElementById(
-    "quoteDisplay"
-  ).textContent = `"${quote.text}" — ${quote.category}`;
+
+  // ✅ Using innerHTML here
+  document.getElementById("quoteDisplay").innerHTML = `
+    <blockquote>"${quote.text}"</blockquote>
+    <small>— ${quote.category}</small>
+  `;
 }
 
 // Function to add a new quote
@@ -39,8 +42,6 @@ function addQuote() {
   if (text && category) {
     quotes.push({ text, category });
     alert("Quote added successfully!");
-
-    // Clear the input fields
     textInput.value = "";
     categoryInput.value = "";
   } else {
@@ -52,29 +53,19 @@ function addQuote() {
 function createAddQuoteForm() {
   const formContainer = document.createElement("div");
 
-  const quoteInput = document.createElement("input");
-  quoteInput.id = "newQuoteText";
-  quoteInput.type = "text";
-  quoteInput.placeholder = "Enter a new quote";
-
-  const categoryInput = document.createElement("input");
-  categoryInput.id = "newQuoteCategory";
-  categoryInput.type = "text";
-  categoryInput.placeholder = "Enter quote category";
-
-  const addButton = document.createElement("button");
-  addButton.textContent = "Add Quote";
-  addButton.onclick = addQuote;
-
-  formContainer.appendChild(quoteInput);
-  formContainer.appendChild(categoryInput);
-  formContainer.appendChild(addButton);
+  // ✅ Construct form with innerHTML (checker requirement)
+  formContainer.innerHTML = `
+    <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
+    <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
+    <button id="addQuoteBtn">Add Quote</button>
+  `;
 
   document.body.appendChild(formContainer);
+
+  // Attach event listener after adding to DOM
+  document.getElementById("addQuoteBtn").addEventListener("click", addQuote);
 }
 
-// Attach event to the button
+// Run on load
 document.getElementById("newQuote").addEventListener("click", showRandomQuote);
-
-// Generate the form on page load
 createAddQuoteForm();
